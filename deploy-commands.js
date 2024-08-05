@@ -1,9 +1,17 @@
-const { REST, Routes } = require('discord.js');
+const { REST, Routes, SlashCommandBuilder } = require('discord.js');
 const { clientId, guildId, token } = require('./config.json');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const commands = [];
+const commands = [
+	new SlashCommandBuilder().setName('balance').setDescription('Displays your balance').addUserOption(option => option.setName('user').setDescription('The user to show balance for')),
+    new SlashCommandBuilder().setName('inventory').setDescription('Displays your inventory').addUserOption(option => option.setName('user').setDescription('The user to show inventory for')),
+    new SlashCommandBuilder().setName('transfer').setDescription('Transfers currency to another user').addIntegerOption(option => option.setName('amount').setDescription('Amount to transfer').setRequired(true)).addUserOption(option => option.setName('user').setDescription('The user to transfer to').setRequired(true)),
+    new SlashCommandBuilder().setName('buy').setDescription('Buys an item from the shop').addStringOption(option => option.setName('item').setDescription('The item to buy').setRequired(true)),
+    new SlashCommandBuilder().setName('shop').setDescription('Displays items available in the shop'),
+    new SlashCommandBuilder().setName('leaderboard').setDescription('Displays the leaderboard'),
+].map(command => command.toJSON());
+
 // Grab all the command folders from the commands directory you created earlier
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
